@@ -7,8 +7,7 @@ function connectionOrientedClusterMatch(N, G, T, c) {
   function K(i, h) {
     for (let j of T[i]) {
       if (h.includes(j) || h.some(x => T[x].includes(j))) {
-       const sqrtCi = Math.sqrt(Math.abs(c[i]));
-       return Math.sign(c[i]) * sqrtCi;
+        return Math.sqrt(c[i]);
       }
     }
     return c[i];
@@ -31,19 +30,16 @@ function connectionOrientedClusterMatch(N, G, T, c) {
         term1 += K(i, h) / T[i].length;
       }
       term1 = Math.sqrt(term1);
-      const sqrtTerm1 = Math.sqrt(Math.abs(term1));
       
       let term2 = 0;
       for (let j of h) {
         term2 += K(j, g) / T[j].length;
       }
       term2 = Math.sqrt(term2);
-      const sqrtTerm2 = Math.sqrt(Math.abs(term2));
       
-      result += 2 * sqrtTerm1 * sqrtTerm2;
+      result += term1 * term2;
     }
   }
   
-  const sqrtResult = Math.sqrt(Math.abs(result));
-  return Math.sign(result) * sqrtResult;
+  return result;
 }
