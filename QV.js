@@ -1,10 +1,4 @@
 function connectionOrientedClusterMatch(N, G, T, c) {
-  
-  // N: set of agents (array of integers)
-  // G: bag of groups (array of arrays of integers)
-  // T: array of sets (arrays of arrays) where T[i] is the groups agent i belongs to
-  // c: array of contributions (floats)
-
   function K(i, h) {
     // If h includes i or any member of h belongs to a group that i belongs to
     if (h.indexOf(i) !== -1 || h.some(x => T[x].indexOf(i) !== -1)) {
