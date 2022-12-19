@@ -5,10 +5,9 @@ function connectionOrientedClusterMatch(N, G, T, c) {
   // c: array of contributions (floats)
   
   function K(i, h) {
-    for (let j of T[i]) {
-      if (h.includes(j) || h.some(x => T[x].includes(j))) {
-        return Math.sqrt(c[i]);
-      }
+    // If h includes i or any member of h belongs to a group that i belongs to
+    if (h.includes(i) || h.some(x => T[x].includes(i))) {
+      return Math.sqrt(c[i]);
     }
     return c[i];
   }
