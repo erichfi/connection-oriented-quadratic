@@ -3,44 +3,32 @@ function connectionOrientedClusterMatch(N, G, T, c) {
   // G: bag of groups (array of arrays of integers)
   // T: array of sets (arrays of arrays) where T[i] is the groups agent i belongs to
   // c: array of contributions (floats)
-  
   function K(i, h) {
     // If h includes i or any member of h belongs to a group that i belongs to
-    if (h.includes(i) || h.some(x => T[x].includes(i))) {
+    if (h.indexOf(i) !== -1 || h.some(x => T[x].indexOf(i) !== -1)) {
       return Math.sqrt(c[i]);
     }
     return c[i];
   }
   
-  let result = 0;
+  // Calculate the contribution of each group
+  const groupContribs = G.map(g => {
+    return g.reduce((acc, i) => acc + c[i] / T[i].length, 0);
+  });
   
-  // Add the contribution of each agent in each group to the result
-  
-  for (let g of G) {
-    for (let i of g) {
-      result += c[i] / T[i].length;
-    }
-  }
+  // Sum up the group contributions
+  let result = groupContribs.reduce((acc, contrib) => acc + contrib, 0);
   
   // Iterate over each pair of groups and add their contribution to the result
-  
   for (let g of G) {
     for (let h of G) {
       if (g === h) continue; // Skip if the groups are the same
       
-      let term1 = 0;
       // Calculate term1 for the current pair of groups
-      for (let i of g) {
-        term1 += K(i, h) / T[i].length;
-      }
-      term1 = Math.sqrt(term1);
+      const term1 = Math.sqrt(g.reduce((acc, i) => acc + K(i, h) / T[i].length, 0));
       
-      let term2 = 0;
       // Calculate term2 for the current pair of groups
-      for (let j of h) {
-        term2 += K(j, g) / T[j].length;
-      }
-      term2 = Math.sqrt(term2);
+      const term2 = Math.sqrt(h.reduce((acc, j) => acc + K(j, g) / T[j].length, 0));
       
       result += 2 * term1 * term2;
     }
