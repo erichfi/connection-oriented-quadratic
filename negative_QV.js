@@ -5,8 +5,7 @@ i belongs. We will sometimes refer to G as the “group structure”.
 In this paper, we can think about one project at a time, so we do not need any notation for
 differentiating projects. Let ci denote the contribution of agent i to a project, and let c be the
 vector of all contributions. For a group g ∈ G, let cg denote the combined contributions of every
-group member, i.e., cg = ∑
-i∈G ci.
+group member, i.e., cg = ∑i∈G ci.
 */
 
 function K(i, h) {
