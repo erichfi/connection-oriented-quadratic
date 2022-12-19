@@ -1,43 +1,49 @@
-/* 
-Let us introduce some notation. Let N = {1, . . . , n} be a set of agents and let G be a bag of
-groups2. Each group g ∈ G is a non-empty subset of N . Let Ti denote the groups to which agent
-i belongs. We will sometimes refer to G as the “group structure”.
-In this paper, we can think about one project at a time, so we do not need any notation for
-differentiating projects. Let ci denote the contribution of agent i to a project, and let c be the
-vector of all contributions. For a group g ∈ G, let cg denote the combined contributions of every
-group member, i.e., cg = ∑i∈G ci.
-*/
-
-function K(i, h) {
-  if (h.includes(i) || h.some(j => intersection(T[i], T[j]).length >= 1)) {
-    const sqrtCi = Math.sqrt(Math.abs(c[i]));
-    return Math.sign(c[i]) * sqrtCi;
-  } else {
+function connectionOrientedClusterMatch(N, G, T, c) {
+  // N: set of agents (array of integers)
+  // G: bag of groups (array of arrays of integers)
+  // T: array of sets (arrays of arrays) where T[i] is the groups agent i belongs to
+  // c: array of contributions (floats)
+  
+  function K(i, h) {
+    for (let j of T[i]) {
+      if (h.includes(j) || h.some(x => T[x].includes(j))) {
+       const sqrtCi = Math.sqrt(Math.abs(c[i]));
+       return Math.sign(c[i]) * sqrtCi;
+      }
+    }
     return c[i];
   }
-}
-
-function connectionOrientedClusterMatch(G) {
-  let sum = 0;
-
-  // Add all group contributions
-  for (const g of G) {
-    for (const i of g) {
-      sum += c[i] / T[i].length;
+  
+  let result = 0;
+  
+  for (let g of G) {
+    for (let i of g) {
+      result += c[i] / T[i].length;
     }
   }
-
-  // Calculate interaction terms
-  for (let g = 0; g < G.length; g++) {
-    for (let h = g + 1; h < G.length; h++) {
-      const gSum = G[g].reduce((acc, i) => acc + K(i, G[h]) / T[i].length, 0);
-      const hSum = G[h].reduce((acc, i) => acc + K(i, G[g]) / T[i].length, 0);
-      const sqrtGSum = Math.sqrt(Math.abs(gSum));
-      const sqrtHSum = Math.sqrt(Math.abs(hSum));
-      sum += 2 * Math.sign(gSum) * sqrtGSum * Math.sign(hSum) * sqrtHSum;
+  
+  for (let g of G) {
+    for (let h of G) {
+      if (g === h) continue;
+      
+      let term1 = 0;
+      for (let i of g) {
+        term1 += K(i, h) / T[i].length;
+      }
+      term1 = Math.sqrt(term1);
+      const sqrtTerm1 = Math.sqrt(Math.abs(term1));
+      
+      let term2 = 0;
+      for (let j of h) {
+        term2 += K(j, g) / T[j].length;
+      }
+      term2 = Math.sqrt(term2);
+      const sqrtTerm2 = Math.sqrt(Math.abs(term2));
+      
+      result += 2 * sqrtTerm1 * sqrtTerm2;
     }
   }
-
-  const sqrtSum = Math.sqrt(Math.abs(sum));
-  return Math.sign(sum) * sqrtSum;
+  
+  const sqrtResult = Math.sqrt(Math.abs(result));
+  return Math.sign(result) * sqrtResult;
 }
