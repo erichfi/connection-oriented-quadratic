@@ -41,5 +41,5 @@ function connectionOrientedClusterMatch(N, G, T, c) {
     }
   }
   
-  return result;
+  return  return Math.sqrt(result);
 }
