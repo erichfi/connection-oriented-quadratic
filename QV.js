@@ -37,7 +37,7 @@ function connectionOrientedClusterMatch(N, G, T, c) {
       }
       term2 = Math.sqrt(term2);
       
-      result += term1 * term2;
+      result += 2 * term1 * term2;
     }
   }
   
