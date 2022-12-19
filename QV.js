@@ -14,23 +14,29 @@ function connectionOrientedClusterMatch(N, G, T, c) {
   
   let result = 0;
   
+  // Add the contribution of each agent in each group to the result
+  
   for (let g of G) {
     for (let i of g) {
       result += c[i] / T[i].length;
     }
   }
   
+  // Iterate over each pair of groups and add their contribution to the result
+  
   for (let g of G) {
     for (let h of G) {
-      if (g === h) continue;
+      if (g === h) continue; // Skip if the groups are the same
       
       let term1 = 0;
+      // Calculate term1 for the current pair of groups
       for (let i of g) {
         term1 += K(i, h) / T[i].length;
       }
       term1 = Math.sqrt(term1);
       
       let term2 = 0;
+      // Calculate term2 for the current pair of groups
       for (let j of h) {
         term2 += K(j, g) / T[j].length;
       }
