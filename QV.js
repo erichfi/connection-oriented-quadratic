@@ -1,12 +1,17 @@
-function connectionOrientedClusterMatch(N, G, T, c) {
+function connectionOrientedClusterMatch(G, T, c) {
   // N: set of agents (array of integers)
   // G: bag of groups (array of arrays of integers)
   // T: array of sets (arrays of arrays) where T[i] is the groups agent i belongs to
   // c: array of contributions (floats)
   
+  function commonGroup(i, j) {
+   // If i and j share any common group, return true. Else return false.
+   return T[i].some(group => T[j].includes(group))
+  }
+  
   function K(i, h) {
     // If h includes i or any member of h belongs to a group that i belongs to
-    if (h.includes(i) || h.some(x => T[x].includes(i))) {
+    if (h.includes(i) || h.some(x => commonGroup(x, i))) {
       return Math.sqrt(c[i]);
     }
     return c[i];
@@ -42,7 +47,7 @@ function connectionOrientedClusterMatch(N, G, T, c) {
       }
       term2 = Math.sqrt(term2);
       
-      result += 2 * term1 * term2;
+      result += term1 * term2;
     }
   }
   
